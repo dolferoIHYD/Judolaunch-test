@@ -3,10 +3,11 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.http import Http404
+from django.http import Http404, JsonResponse
 
 from .models import Task
 from .forms import AddTaskForm, EditTaskForm
@@ -104,6 +105,10 @@ def add_task_view(request):
 @login_required
 @require_http_methods(['GET', 'POST'])
 def edit_task_view(request, task_id):
+    """
+        Take, on get - return it, on POST - rewrite object and save.
+        Boring!
+    """
     try:
         task = Task.objects.get(id=task_id)
     except Task.DoesNotExist:
@@ -118,3 +123,40 @@ def edit_task_view(request, task_id):
         else:
             return render(request, 'edit_task.html', {'form': form})
         return redirect('/')
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def mark_tasks_as_done_view(request):
+    """
+        View marks tasks as done.
+
+        Front POST data on click to checkbox.
+        Check, if task with this id isn't done, ONLY THEN switch them to
+        done (because you cant undone your task=) ).
+        Responses are not reading in frontend.
+    """
+    task_id = int(request.POST['task_id'])
+    try:
+        task = Task.objects.get(id = task_id)
+    except Task.DoesNotExist:
+        return JsonResponse({'ok': 'not ok'})
+    if not task.done:
+        task.done = True
+        task.done_by = request.user
+        task.save()
+    return JsonResponse({'ok': 'ok'})
+
+
+@login_required
+@require_http_methods(['GET'])
+def delete_task_view(request, task_id):
+    """
+        Just get task object and delete it. Nothing magical.
+    """
+    try:
+        task = Task.objects.get(id = task_id)
+    except Task.DoesNotExist:
+        raise Http404()
+    task.delete()
+    return redirect('/')

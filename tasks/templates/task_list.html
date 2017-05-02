@@ -3,7 +3,6 @@
 {% block header %}Task list{% endblock %}
 
 {% block content %}
-  <div class="left_side">
 
     <!-- Add button here -->
     <div class="add_button_wrapper">
@@ -12,36 +11,40 @@
 
     <div class="task_list_wrapper">
       <ul class="demo-list-three mdl-list">
-        {% for task in tasks %}
-          <li class="mdl-list__item mdl-list__item--three-line">
-            <span class="mdl-list__item-primary-content">
-              {% if request.user == task.created_by %}
-                <a href="{{ task.id }}/edit/"><i class="material-icons mdl-list__item-avatar">mode_edit</i></a>
-              {% endif %}
-              <span>{{ task.name }}</span>
-              <span class="mdl-list__item-text-body">
-                {{ task.description }}
+          {% for task in tasks %}
+            <li class="mdl-list__item mdl-list__item--three-line">
+              <span class="mdl-list__item-primary-content">
+                {% if request.user == task.created_by %}
+                  <a href="{{ task.id }}/edit/"><i class="material-icons mdl-list__item-avatar">mode_edit</i></a>
+                  <a href="{{ task.id }}/delete/"><i class="material-icons mdl-list__item-avatar">delete</i></a>
+                {% endif %}
+                <span>{{ task.name }}</span>
+                <span class="mdl-list__item-text-body">
+                  {{ task.description }} <br>
+                  Created by: {{ task.created_by.get_full_name }}
+                  {% if task.done %}
+                    <br>
+                    Done by: {{ task.done_by.get_full_name }}
+                  {% endif %}
+                </span>
               </span>
-            </span>
-            <span class="mdl-list__item-secondary-content">
-              <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="list-checkbox-{{ forloop.counter }}">
-                <input type="checkbox" name='{{ task.id }}' id="list-checkbox-{{ forloop.counter }}" class="mdl-checkbox__input"  {% if task.done %}checked{% endif %}/>
-              </label>
-            </span>
-          </li>
-        {% endfor %}
+              <span class="mdl-list__item-secondary-content">
+                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="list-checkbox-{{ forloop.counter }}">
+                  <input type="checkbox" name='{{ task.id }}' id="list-checkbox-{{ forloop.counter }}" class="mdl-checkbox__input" onclick='mark_as_done({{ task.id }})' {% if task.done %}checked{% endif %}/>
+                </label>
+              </span>
+            </li>
+          {% endfor %}
       </ul>
     </div>
 
-  </div>
+    <script type="text/javascript">
+      function mark_as_done(task_id_var) {
+        $.post(
+          '/done/',
+          {task_id: task_id_var}
+        );
+      }
 
-  <div class="right_side">
-      <div class="add_button_wrapper">
-        <a href="add"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" name="add_task">Mark tasks as done</button></a>
-      </div>
-      <div class="add_button_wrapper">
-        <a href="add"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" name="add_task">Delete checked tasks</button></a>
-      </div>
-  </div>
-
+    </script>
 {% endblock %}
