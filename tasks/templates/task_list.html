@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block header %}Task list{% endblock %}
+
+{% block content %}
+  <div class="left_side">
+
+    <!-- Add button here -->
+    <div class="add_button_wrapper">
+      <a href="add"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" name="add_task">Add a new task</button></a>
+    </div>
+
+    <div class="task_list_wrapper">
+      <ul class="demo-list-three mdl-list">
+        {% for task in tasks %}
+          <li class="mdl-list__item mdl-list__item--three-line">
+            <span class="mdl-list__item-primary-content">
+              <a href="{{ task.id }}/edit/"><i class="material-icons mdl-list__item-avatar">mode_edit</i></a>
+              <span>{{ task.name }}</span>
+              <span class="mdl-list__item-text-body">
+                {{ task.description }}
+              </span>
+            </span>
+            <span class="mdl-list__item-secondary-content">
+              <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="list-checkbox-{{ forloop.counter }}">
+                <input type="checkbox" id="list-checkbox-{{ forloop.counter }}" class="mdl-checkbox__input"  />
+              </label>
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="right_side">
+      <div class="add_button_wrapper">
+        <a href="add"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" name="add_task">Mark tasks as done</button></a>
+      </div>
+      <div class="add_button_wrapper">
+        <a href="add"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" name="add_task">Delete checked tasks</button></a>
+      </div>
+  </div>
+
+{% endblock %}
