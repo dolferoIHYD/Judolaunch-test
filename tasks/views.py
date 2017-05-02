@@ -74,7 +74,16 @@ def logout_view(request):
 @login_required()
 @require_http_methods(['GET'])
 def task_list_view(request):
-    tasks = Task.objects.all()
+    """
+        Task list. In GET can be param undone.
+        If undone, then show only tasks, where done==False.
+        I'm a backend dev, so doing it on back.
+    """
+    filtr = request.GET.get('undone', '')
+    if filtr:
+        tasks = Task.objects.filter(done='False')
+    else:
+        tasks = Task.objects.all()
     return render(request, 'task_list.html', {'tasks':tasks})
 
 
