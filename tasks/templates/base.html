@@ -22,6 +22,9 @@
         float: left;
       }
 
+      .form_wrapper {
+        margin: 150px;
+      }
     </style>
   </head>
   <body>
@@ -33,6 +36,14 @@
           <span class="mdl-layout-title">{% block header %}{% endblock %}</span>
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
+          <!-- Navigation. We hide it in small screens. -->
+          <nav class="mdl-navigation mdl-layout--large-screen-only">
+            {% if request.user.is_authenticated %}
+              <a class="mdl-navigation__link" href="/logout/">Logout</a>
+            {% else %}
+              <a class="mdl-navigation__link" href="/register/">Register</a>
+            {% endif %}
+          </nav>
         </div>
       </header>
       <main class="mdl-layout__content">

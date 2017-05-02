@@ -15,7 +15,9 @@
         {% for task in tasks %}
           <li class="mdl-list__item mdl-list__item--three-line">
             <span class="mdl-list__item-primary-content">
-              <a href="{{ task.id }}/edit/"><i class="material-icons mdl-list__item-avatar">mode_edit</i></a>
+              {% if request.user == task.created_by %}
+                <a href="{{ task.id }}/edit/"><i class="material-icons mdl-list__item-avatar">mode_edit</i></a>
+              {% endif %}
               <span>{{ task.name }}</span>
               <span class="mdl-list__item-text-body">
                 {{ task.description }}
@@ -23,7 +25,7 @@
             </span>
             <span class="mdl-list__item-secondary-content">
               <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="list-checkbox-{{ forloop.counter }}">
-                <input type="checkbox" id="list-checkbox-{{ forloop.counter }}" class="mdl-checkbox__input"  />
+                <input type="checkbox" name='{{ task.id }}' id="list-checkbox-{{ forloop.counter }}" class="mdl-checkbox__input"  {% if task.done %}checked{% endif %}/>
               </label>
             </span>
           </li>

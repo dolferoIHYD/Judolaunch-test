@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}Login{% endblock %}
+
+{% block content %}
+  <form class="form_wrapper" action="" method="post">
+    {{ error }} <br>
+    {% csrf_token %}
+    Username:
+    <input class='add_button_wrapper' type="text" name="username" value=""> <br>
+    Password:
+    <input class='add_button_wrapper' type="password" name="password" value=""> <br>
+    <input class='add_button_wrapper mdl-button mdl-js-button mdl-button--raised mdl-button--colored' type="submit" name="name" value="Login"> <br>
+  </form>
+{% endblock %}
