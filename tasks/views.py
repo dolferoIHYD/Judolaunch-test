@@ -17,6 +17,8 @@ from .forms import AddTaskForm, EditTaskForm
 def login_view(request):
     """
         Do you really need comment here?
+
+        I'm not checking 'next' var of GET here.
     """
     if request.method == 'GET':
         if request.user.is_authenticated():
@@ -57,7 +59,8 @@ def register_view(request):
                                             username=data['username'],
                                             password=data['password'])
         else:
-            return render(request, 'register.html', 'Passwords are different')
+            return render(request, 'register.html',
+                          {'error':'Passwords are different'})
         login(request, user)
         return redirect('/')
 
